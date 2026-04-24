@@ -11,19 +11,18 @@ export default function OnboardingLayout({ children }) {
     if (loaded) return
     fetch('/api/onboarding/answers')
       .then(r => r.json())
-      .then(data => loadAnswers(data.answers || []))
+      .then(d => loadAnswers(d.answers || []))
       .catch(() => loadAnswers([]))
   }, [loaded, loadAnswers])
 
   return (
-    <div className="min-h-screen bg-bg-primary">
-      {/* Top bar */}
-      <header className="h-16 border-b border-gray-100 bg-white flex items-center px-6 sm:px-8">
-        <Link href="/" className="font-display font-bold text-lg text-accent-blue tracking-tight">
+    <div className="min-h-screen bg-surface-0">
+      <header className="h-16 border-b border-edge-subtle bg-surface-1 flex items-center px-5 sm:px-8">
+        <Link href="/" className="font-display font-bold text-base text-ink-bright flex items-center gap-2">
+          <span className="w-6 h-6 rounded bg-brand-violet flex items-center justify-center text-[10px] font-black text-white">S</span>
           Social AI
         </Link>
       </header>
-
       {children}
     </div>
   )

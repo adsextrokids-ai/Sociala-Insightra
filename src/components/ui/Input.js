@@ -2,25 +2,23 @@ export default function Input({ label, error, type = 'text', className = '', ...
   return (
     <div className={className}>
       {label && (
-        <label className="block text-body-sm font-medium text-content-primary mb-1.5">
+        <label className="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">
           {label}
         </label>
       )}
       <input
         type={type}
         className={[
-          'w-full h-12 px-4 rounded-lg border text-body-sm text-content-primary',
-          'bg-bg-secondary placeholder:text-content-secondary/50',
+          'w-full h-12 px-4 rounded-xl border text-sm text-ink-bright',
+          'bg-surface-2 placeholder:text-ink-ghost',
           'outline-none transition-all duration-150',
           error
-            ? 'border-status-error focus:ring-2 focus:ring-status-error/25'
-            : 'border-gray-200 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20',
+            ? 'border-bad focus:ring-2 focus:ring-bad/25'
+            : 'border-edge focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20',
         ].join(' ')}
         {...props}
       />
-      {error && (
-        <p className="mt-1.5 text-label text-status-error">{error}</p>
-      )}
+      {error && <p className="mt-1.5 text-xs text-bad">{error}</p>}
     </div>
   )
 }

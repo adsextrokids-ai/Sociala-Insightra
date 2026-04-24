@@ -8,17 +8,15 @@ export default function AuthCard({ children, title, subtitle }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-white rounded-card shadow-card-lg p-8 sm:p-10 border border-gray-100 w-full"
+      className="bg-surface-1 border border-edge-subtle rounded-card p-8 sm:p-10 w-full shadow-card"
     >
       {(title || subtitle) && (
         <div className="mb-8 text-center">
           {title && (
-            <h1 className="text-display-md font-display font-semibold text-content-primary mb-2">
-              {title}
-            </h1>
+            <h1 className="font-display text-h3 font-bold text-ink-bright mb-2">{title}</h1>
           )}
           {subtitle && (
-            <p className="text-body-sm text-content-secondary">{subtitle}</p>
+            <p className="text-sm text-ink-muted">{subtitle}</p>
           )}
         </div>
       )}

@@ -8,172 +8,151 @@ import { QUESTIONS, TOTAL_STEPS, SECTION_COLORS } from '@/config/questions'
 import { useOnboardingStore } from '@/store/onboardingStore'
 import AnswerInput from '@/components/onboarding/AnswerInput'
 
-function getDefaultAnswer(type) {
-  if (type === 'multiselect') return []
-  if (type === 'boolean') return null
-  return ''
+function defaultAnswer(type) {
+  return type === 'multiselect' ? [] : type === 'boolean' ? null : ''
 }
 
-function isAnswerValid(type, value) {
+function isValid(type, value) {
   if (value === null || value === undefined) return false
-  if (type === 'text') return String(value).trim().length > 0
-  if (type === 'select') return Boolean(value)
+  if (type === 'text')        return String(value).trim().length > 0
+  if (type === 'select')      return Boolean(value)
   if (type === 'multiselect') return Array.isArray(value) && value.length > 0
-  if (type === 'boolean') return value !== null && value !== undefined
+  if (type === 'boolean')     return value !== null
   return false
 }
 
 export default function OnboardingStepPage() {
-  const params  = useParams()
-  const router  = useRouter()
-  const stepNum = parseInt(params.step, 10)
+  const { step } = useParams()
+  const stepNum   = parseInt(step, 10)
+  const router    = useRouter()
+  const question  = QUESTIONS.find(q => q.step === stepNum)
 
   const { answers, setAnswer, getAnswer, loaded } = useOnboardingStore()
-  const question = QUESTIONS.find(q => q.step === stepNum)
+  const [value,  setValue]  = useState(null)
+  const [saving, setSaving] = useState(false)
+  const prevRef = useRef(stepNum)
+  const [dir, setDir] = useState(1)
 
-  const [value,   setValue]   = useState(null)
-  const [saving,  setSaving]  = useState(false)
-  const [direction, setDirection] = useState(1) // 1 = forward, -1 = backward
-  const prevStep = useRef(stepNum)
-
-  // Sync answer from store when store loads or step changes
   useEffect(() => {
-    if (loaded) {
-      const existing = getAnswer(stepNum)
-      setValue(existing ?? getDefaultAnswer(question?.type))
-    }
+    if (loaded) setValue(getAnswer(stepNum) ?? defaultAnswer(question?.type))
   }, [loaded, stepNum])
 
-  // Determine animation direction
   useEffect(() => {
-    setDirection(stepNum > prevStep.current ? 1 : -1)
-    prevStep.current = stepNum
+    setDir(stepNum > prevRef.current ? 1 : -1)
+    prevRef.current = stepNum
   }, [stepNum])
 
-  if (!question) {
-    router.replace('/onboarding/1')
-    return null
-  }
+  if (!question) { router.replace('/onboarding/1'); return null }
 
-  const isValid = isAnswerValid(question.type, value)
-  const isLast  = stepNum === TOTAL_STEPS
-  const pct     = Math.round((stepNum / TOTAL_STEPS) * 100)
-  const colors  = SECTION_COLORS[question.section] || SECTION_COLORS.business_basics
+  const valid  = isValid(question.type, value)
+  const isLast = stepNum === TOTAL_STEPS
+  const pct    = Math.round((stepNum / TOTAL_STEPS) * 100)
 
-  async function handleNext() {
-    if (!isValid || saving) return
+  // Section badge color
+  const sectionColor = {
+    business_basics: 'text-brand-violet bg-brand-violet/10 border-brand-violet/20',
+    identity:        'text-brand-cyan   bg-brand-cyan/10   border-brand-cyan/20',
+    goals:           'text-ok           bg-ok/10           border-ok/20',
+    challenges:      'text-warn         bg-warn/10         border-warn/20',
+    content:         'text-brand-violet bg-brand-violet/10 border-brand-violet/20',
+    expectations:    'text-brand-gold   bg-brand-gold/10   border-brand-gold/20',
+  }[question.section] || 'text-ink-muted bg-surface-3 border-edge'
+
+  async function next() {
+    if (!valid || saving) return
     setSaving(true)
-
-    // Persist to store immediately
     setAnswer(stepNum, value)
 
-    // Save to DB
     await fetch('/api/onboarding/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        step: stepNum,
-        section: question.section,
-        question: question.question,
-        answer: value,
-      }),
+      body: JSON.stringify({ step: stepNum, section: question.section, question: question.question, answer: value }),
     })
 
     if (isLast) {
       await fetch('/api/onboarding/complete', { method: 'POST' })
       router.push('/dashboard')
     } else {
-      setDirection(1)
+      setDir(1)
       router.push(`/onboarding/${stepNum + 1}`)
     }
-
     setSaving(false)
   }
 
-  function handleBack() {
-    if (stepNum <= 1) return
-    setDirection(-1)
-    router.push(`/onboarding/${stepNum - 1}`)
-  }
-
-  const slideVariants = {
-    enter:  (d) => ({ opacity: 0, x: d * 40 }),
+  const variants = {
+    enter:  (d) => ({ opacity: 0, x: d * 48 }),
     center: { opacity: 1, x: 0 },
-    exit:   (d) => ({ opacity: 0, x: d * -40 }),
+    exit:   (d) => ({ opacity: 0, x: d * -48 }),
   }
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex flex-col">
 
-      {/* Progress bar */}
-      <div className="h-1 bg-gray-100">
+      {/* Progress */}
+      <div className="h-0.5 bg-edge">
         <motion.div
-          className="h-full bg-gradient-to-r from-accent-blue to-accent-purple"
+          className="h-full bg-gradient-to-r from-brand-violet to-brand-cyan"
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          transition={{ duration: 0.4 }}
         />
       </div>
 
-      {/* Step counter */}
-      <div className="flex items-center justify-between px-6 sm:px-10 py-4 border-b border-gray-100 bg-white">
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-label font-medium ${colors.bg} ${colors.text}`}>
+      {/* Step info */}
+      <div className="flex items-center justify-between px-5 sm:px-10 py-4 border-b border-edge-subtle bg-surface-1">
+        <span className={`inline-flex items-center px-3 py-1 rounded-pill border text-xs font-semibold ${sectionColor}`}>
           {question.sectionLabel}
         </span>
-        <span className="text-label text-content-secondary">
-          {stepNum} <span className="text-content-secondary/50">of</span> {TOTAL_STEPS}
+        <span className="text-xs text-ink-ghost">
+          {stepNum} <span className="opacity-40">of</span> {TOTAL_STEPS}
         </span>
       </div>
 
-      {/* Question area */}
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
-        <AnimatePresence mode="wait" custom={direction}>
+      {/* Question */}
+      <div className="flex-1 flex items-center justify-center px-4 py-14">
+        <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={stepNum}
-            custom={direction}
-            variants={slideVariants}
+            custom={dir}
+            variants={variants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-[640px]"
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-[600px]"
           >
-            {/* Question text */}
-            <h2 className="text-display-md font-display font-semibold text-content-primary mb-8 text-balance leading-snug">
+            <h2 className="font-display text-h2 font-bold text-ink-bright mb-8 leading-tight">
               {question.question}
             </h2>
 
-            {/* Input */}
             <AnswerInput question={question} value={value} onChange={setValue} />
 
-            {/* Navigation */}
             <div className="flex items-center justify-between mt-10">
               <button
                 type="button"
-                onClick={handleBack}
+                onClick={() => { setDir(-1); router.push(`/onboarding/${stepNum - 1}`) }}
                 disabled={stepNum <= 1}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-body-sm font-medium text-content-secondary hover:text-content-primary hover:bg-bg-secondary transition-all disabled:opacity-0"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-all disabled:opacity-0"
               >
-                <ArrowLeft size={16} />
-                Back
+                <ArrowLeft size={15} /> Back
               </button>
 
               <button
                 type="button"
-                onClick={handleNext}
-                disabled={!isValid || saving}
+                onClick={next}
+                disabled={!valid || saving}
                 className={[
-                  'inline-flex items-center gap-2 px-7 py-3 rounded-pill text-body-sm font-medium transition-all',
-                  isValid && !saving
-                    ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md hover:opacity-90 hover:-translate-y-0.5'
-                    : 'bg-gray-100 text-content-secondary cursor-not-allowed',
+                  'inline-flex items-center gap-2 px-7 py-3 rounded-pill text-sm font-semibold transition-all',
+                  valid && !saving
+                    ? 'bg-brand-gold text-surface-0 hover:bg-brand-gold2 shadow-glow-gold hover:-translate-y-0.5'
+                    : 'bg-surface-3 text-ink-ghost cursor-not-allowed',
                 ].join(' ')}
               >
                 {saving
-                  ? <><Loader2 size={15} className="animate-spin" /> Saving…</>
+                  ? <><Loader2 size={14} className="animate-spin" /> Saving…</>
                   : isLast
-                    ? <>Finish & see results <ArrowRight size={15} /></>
-                    : <>Continue <ArrowRight size={15} /></>
+                    ? <>Finish &amp; see results <ArrowRight size={14} /></>
+                    : <>Continue <ArrowRight size={14} /></>
                 }
               </button>
             </div>

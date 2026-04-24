@@ -5,19 +5,30 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-bg-primary text-content-primary antialiased;
+    background-color: #070810;
+    color: #B8C4D8;
+  }
+
+  ::selection {
+    background-color: rgba(139, 92, 246, 0.3);
+    color: #F0F4FF;
   }
 
   * {
-    @apply box-border;
+    box-sizing: border-box;
   }
-}
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
   }
+  ::-webkit-scrollbar-track { background: #0C0E1B; }
+  ::-webkit-scrollbar-thumb { background: #252C48; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #323C60; }
 }

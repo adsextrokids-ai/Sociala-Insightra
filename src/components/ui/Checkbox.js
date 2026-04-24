@@ -5,7 +5,7 @@ export default function Checkbox({ id, checked, onChange, className = '' }) {
       type="checkbox"
       checked={checked}
       onChange={onChange}
-      className={`w-4 h-4 rounded border-gray-300 text-accent-blue focus:ring-accent-blue/30 cursor-pointer accent-accent-blue ${className}`}
+      className={`w-4 h-4 rounded border-edge bg-surface-2 text-brand-violet focus:ring-brand-violet/30 cursor-pointer accent-brand-violet ${className}`}
     />
   )
 }

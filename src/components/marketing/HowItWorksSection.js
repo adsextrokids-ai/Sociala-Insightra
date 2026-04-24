@@ -1,41 +1,45 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Link2, ScanLine, Rocket } from 'lucide-react'
 
 const STEPS = [
   {
-    number: 1,
-    Icon: Link2,
-    title: 'Connect',
-    description: 'Link your Instagram, YouTube, or Facebook in one click. No technical setup required.',
+    number: '01',
+    title: 'Connect your accounts',
+    body: 'Link Instagram, YouTube, or Facebook in one click. We handle OAuth — you never share your password.',
+    color: 'text-brand-violet',
+    border: 'border-brand-violet/30',
+    bg: 'bg-brand-violet/8',
   },
   {
-    number: 2,
-    Icon: ScanLine,
-    title: 'Analyze',
-    description: 'Our AI scans your content, engagement patterns, brand signals, and audience data.',
+    number: '02',
+    title: 'AI scans everything',
+    body: 'Our engine reads your profile, posts, engagement patterns, branding, and audience signals.',
+    color: 'text-brand-cyan',
+    border: 'border-brand-cyan/30',
+    bg: 'bg-brand-cyan/8',
   },
   {
-    number: 3,
-    Icon: Rocket,
-    title: 'Grow',
-    description: 'Receive a custom 90-day roadmap, content ideas, and fixes that are specific to your business.',
+    number: '03',
+    title: 'Get your growth plan',
+    body: 'A detailed intelligence report with scores, insights, and a custom 7/30/90-day roadmap lands in your dashboard.',
+    color: 'text-brand-gold',
+    border: 'border-brand-gold/30',
+    bg: 'bg-brand-gold/8',
   },
 ]
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-28 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="how-it-works" className="py-28 bg-surface-1">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-        <div className="text-center mb-20">
+        <div className="mb-16">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="text-label text-accent-blue font-medium uppercase tracking-widest mb-3"
+            className="text-xs font-semibold text-brand-cyan uppercase tracking-widest mb-4"
           >
             How it works
           </motion.p>
@@ -43,44 +47,31 @@ export default function HowItWorksSection() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-display-md font-display font-semibold text-content-primary"
+            transition={{ duration: 0.5 }}
+            className="font-display text-h1 font-bold text-ink-bright max-w-[400px] leading-tight"
           >
-            From connected to growing in 3 steps
+            From connected to growing in 3 steps.
           </motion.h2>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+          {/* Connector line */}
+          <div aria-hidden className="hidden md:block absolute top-8 left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px border-t border-dashed border-edge" />
 
-          {/* Dashed connector — desktop only */}
-          <div
-            aria-hidden
-            className="hidden md:block absolute top-8 left-[calc(50%/3+48px)] right-[calc(50%/3+48px)] h-px border-t-2 border-dashed border-gray-200"
-          />
-
-          {STEPS.map(({ number, Icon, title, description }, i) => (
+          {STEPS.map(({ number, title, body, color, border, bg }, i) => (
             <motion.div
               key={number}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center text-center"
+              transition={{ duration: 0.5, delay: i * 0.12 }}
+              className="relative"
             >
-              {/* Step circle */}
-              <div className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center mb-6 shadow-lg shadow-accent-blue/20">
-                <Icon size={24} className="text-white" />
-                <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white border-2 border-accent-blue flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-accent-blue">{number}</span>
-                </div>
+              <div className={`w-16 h-16 rounded-2xl ${bg} border ${border} flex items-center justify-center mb-6 relative z-10`}>
+                <span className={`font-display text-h3 font-bold ${color}`}>{number}</span>
               </div>
-
-              <h3 className="text-xl font-display font-semibold text-content-primary mb-3">
-                {title}
-              </h3>
-              <p className="text-body-sm text-content-secondary max-w-[260px] leading-relaxed">
-                {description}
-              </p>
+              <h3 className="font-display text-base font-semibold text-ink-bright mb-2">{title}</h3>
+              <p className="text-sm text-ink-muted leading-relaxed">{body}</p>
             </motion.div>
           ))}
         </div>

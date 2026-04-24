@@ -2,94 +2,84 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Check, Zap } from 'lucide-react'
+import { Check } from 'lucide-react'
 
-const FEATURES = [
-  'AI social media audit',
+const ITEMS = [
+  'Full AI social media audit',
   'Business intelligence report',
-  'Growth roadmap (7 / 30 / 90 days)',
-  'Content suggestions & hooks',
+  '7 / 30 / 90-day growth roadmap',
+  'Content ideas and post hooks',
   'Instagram, YouTube & Facebook',
-  'Strength & weakness analysis',
+  'Strength & weakness breakdown',
+  'Goal-aligned recommendations',
 ]
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="py-28 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="pricing" className="py-28 bg-surface-1">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-        <div className="text-center mb-14">
+        <div className="mb-16">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-label text-accent-blue font-medium uppercase tracking-widest mb-3"
+            className="text-xs font-semibold text-brand-gold uppercase tracking-widest mb-4"
           >
             Pricing
           </motion.p>
-          <motion.div
+          <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5 }}
+            className="font-display text-h1 font-bold text-ink-bright max-w-[400px] leading-tight"
           >
-            <h2 className="text-display-md font-display font-semibold text-content-primary mb-4">
-              Free during beta
-            </h2>
-            <p className="text-body-lg text-content-secondary max-w-[440px] mx-auto">
-              We&apos;re currently in beta. All features are free. Paid plans launching soon.
-            </p>
-          </motion.div>
+            Free while we&apos;re in beta.
+          </motion.h2>
         </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-[420px] mx-auto relative"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="max-w-[440px] relative"
         >
-          {/* Card glow */}
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 to-accent-purple/10 rounded-card blur-xl scale-95 -z-10" />
+          {/* Glow */}
+          <div aria-hidden className="absolute -inset-4 bg-brand-violet/5 rounded-3xl blur-2xl -z-10" />
 
-          <div className="bg-white rounded-card p-8 border border-gray-200 shadow-card-lg relative overflow-hidden">
+          <div className="bg-surface-2 border border-edge rounded-card overflow-hidden">
+            {/* Top bar */}
+            <div className="h-1 bg-gradient-to-r from-brand-violet to-brand-cyan" />
 
-            {/* Top gradient bar */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-blue to-accent-purple" />
-
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-purple/20 flex items-center justify-center">
-                <Zap size={14} className="text-accent-blue" />
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="font-display text-h2 font-bold text-ink-bright">$0</p>
+                  <p className="text-sm text-ink-muted">/ month during beta</p>
+                </div>
+                <span className="px-3 py-1 rounded-pill bg-ok/10 text-ok text-xs font-semibold">Beta — free</span>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-status-success/10 text-status-success text-label font-medium">
-                Beta &mdash; Free forever until launch
-              </span>
+
+              <ul className="space-y-3 mb-8">
+                {ITEMS.map(item => (
+                  <li key={item} className="flex items-center gap-3">
+                    <span className="w-4 h-4 rounded-full bg-ok/15 flex items-center justify-center flex-shrink-0">
+                      <Check size={9} className="text-ok" />
+                    </span>
+                    <span className="text-sm text-ink-muted">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/signup"
+                className="block w-full text-center py-3.5 px-6 rounded-pill bg-brand-gold text-surface-0 font-semibold text-sm hover:bg-brand-gold2 transition-all shadow-glow-gold"
+              >
+                Get early access — free
+              </Link>
             </div>
-
-            <div className="mb-8">
-              <div className="flex items-baseline gap-2">
-                <span className="text-display-lg font-display font-bold text-content-primary">$0</span>
-                <span className="text-body-sm text-content-secondary">/ month during beta</span>
-              </div>
-            </div>
-
-            <ul className="space-y-3.5 mb-8">
-              {FEATURES.map(feature => (
-                <li key={feature} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-status-success/10 flex items-center justify-center flex-shrink-0">
-                    <Check size={11} className="text-status-success" />
-                  </div>
-                  <span className="text-body-sm text-content-secondary">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Link
-              href="/signup"
-              className="block w-full text-center py-3.5 px-6 bg-gradient-to-r from-accent-blue to-accent-purple text-white font-medium rounded-lg hover:opacity-90 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            >
-              Get early access — free
-            </Link>
           </div>
         </motion.div>
       </div>

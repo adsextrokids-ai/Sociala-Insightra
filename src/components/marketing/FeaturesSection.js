@@ -1,80 +1,99 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Sparkles, TrendingUp, Target } from 'lucide-react'
+import { ScanLine, BarChart3, Lightbulb, Map, MessageSquare, Target } from 'lucide-react'
 
 const FEATURES = [
   {
-    Icon: Sparkles,
-    title: 'AI Social Analysis',
-    description: 'Deep scan of your Instagram, engagement patterns, content quality, and branding — surfaced as clear, actionable scores.',
-    accent: 'from-accent-blue/20 to-accent-purple/10',
-    iconColor: 'text-accent-blue',
+    Icon: ScanLine,
+    title: 'Deep social scan',
+    body: 'Every post, caption, hashtag, and engagement metric analyzed — not just surface stats.',
+    span: 'col-span-1',
+    accent: 'text-brand-violet',
+    glow: 'group-hover:shadow-glow',
   },
   {
-    Icon: TrendingUp,
-    title: 'Growth Roadmap',
-    description: 'A 7/30/90-day action plan customized to your specific business goals and current social performance.',
-    accent: 'from-accent-purple/20 to-accent-blue/10',
-    iconColor: 'text-accent-purple',
+    Icon: BarChart3,
+    title: 'Scored performance',
+    body: 'Four business scores across brand, content, audience, and overall health — updated after every scan.',
+    span: 'col-span-1',
+    accent: 'text-brand-cyan',
+    glow: 'group-hover:shadow-[0_0_40px_-15px_rgba(34,211,238,0.3)]',
+  },
+  {
+    Icon: Lightbulb,
+    title: 'Strength & weakness map',
+    body: 'Exactly what\'s working. Exactly what\'s not. No filler, no generic advice.',
+    span: 'col-span-1 md:col-span-2',
+    accent: 'text-brand-gold',
+    glow: 'group-hover:shadow-glow-gold',
+  },
+  {
+    Icon: Map,
+    title: '90-day growth roadmap',
+    body: 'Immediate wins, medium-term strategy, and long-term scale — prioritized to your goals.',
+    span: 'col-span-1 md:col-span-2',
+    accent: 'text-ok',
+    glow: '',
+  },
+  {
+    Icon: MessageSquare,
+    title: 'Content idea engine',
+    body: 'Hooks, captions, and formats proven to work for your specific audience and niche.',
+    span: 'col-span-1',
+    accent: 'text-brand-violet2',
+    glow: '',
   },
   {
     Icon: Target,
-    title: 'Smart Recommendations',
-    description: 'Content ideas, posting schedules, and targeted fixes that move the needle on growth — not generic advice.',
-    accent: 'from-status-success/15 to-accent-blue/10',
-    iconColor: 'text-status-success',
+    title: 'Goal-aligned analysis',
+    body: 'Whether you\'re growing revenue, audience, or authority — every insight is filtered through your stated goals.',
+    span: 'col-span-1',
+    accent: 'text-brand-cyan',
+    glow: '',
   },
 ]
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="py-28 bg-bg-secondary">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="features" className="py-28 bg-surface-0">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-        <div className="text-center mb-16">
+        <div className="mb-16">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-xs font-semibold text-brand-violet uppercase tracking-widest mb-4"
+          >
+            Features
+          </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-display-md font-display font-semibold text-content-primary mb-4"
+            transition={{ duration: 0.5 }}
+            className="font-display text-h1 font-bold text-ink-bright max-w-[480px] leading-tight"
           >
-            Everything you need to grow smarter
+            Intelligence your team can actually use.
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-body-lg text-content-secondary max-w-[460px] mx-auto"
-          >
-            One platform. Your social presence, analyzed end to end.
-          </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {FEATURES.map(({ Icon, title, description, accent, iconColor }, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {FEATURES.map(({ Icon, title, body, span, accent, glow }, i) => (
             <motion.div
               key={title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative bg-white rounded-card p-8 shadow-card hover:shadow-card-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100 hover:border-gray-200"
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className={`group ${span} relative bg-surface-1 border border-edge-subtle rounded-card p-7 hover:border-edge transition-all duration-300 ${glow}`}
             >
-              {/* Top accent line */}
-              <div className={`absolute top-0 left-8 right-8 h-px bg-gradient-to-r ${accent} opacity-0 group-hover:opacity-100 transition-opacity`} />
-
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${accent} flex items-center justify-center mb-6`}>
-                <Icon size={22} className={iconColor} />
+              <div className={`w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center mb-5 ${accent}`}>
+                <Icon size={18} />
               </div>
-              <h3 className="text-lg font-display font-semibold text-content-primary mb-3">
-                {title}
-              </h3>
-              <p className="text-body-sm text-content-secondary leading-relaxed">
-                {description}
-              </p>
+              <h3 className="font-display text-base font-semibold text-ink-bright mb-2">{title}</h3>
+              <p className="text-sm text-ink-muted leading-relaxed">{body}</p>
             </motion.div>
           ))}
         </div>
