@@ -16,13 +16,7 @@ export default function OnboardingLayout({ children }) {
   }, [loaded, loadAnswers])
 
   return (
-    <div className="min-h-screen bg-surface-0">
-      <header className="h-16 border-b border-edge-subtle bg-surface-1 flex items-center px-5 sm:px-8">
-        <Link href="/" className="font-display font-bold text-base text-ink-bright flex items-center gap-2">
-          <span className="w-6 h-6 rounded bg-brand-violet flex items-center justify-center text-[10px] font-black text-white">S</span>
-          Social AI
-        </Link>
-      </header>
+    <div className="min-h-screen bg-surface-0 flex flex-col">
       {children}
     </div>
   )

@@ -3,24 +3,24 @@
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 
-function strength(val) {
+function getStrength(val) {
   if (!val || val.length < 8) return 'weak'
-  const u = /[A-Z]/.test(val)
-  const n = /[0-9]/.test(val)
-  if (u && n) return 'strong'
-  if (u || n) return 'medium'
+  const hasUpper = /[A-Z]/.test(val)
+  const hasNum   = /[0-9]/.test(val)
+  if (hasUpper && hasNum) return 'strong'
+  if (hasUpper || hasNum) return 'medium'
   return 'weak'
 }
 
-const S = {
-  weak:   { label: 'Weak',   bar: 'w-1/3 bg-bad',   text: 'text-bad'  },
+const STRENGTH = {
+  weak:   { label: 'Weak',   bar: 'w-1/3 bg-bad',  text: 'text-bad'  },
   medium: { label: 'Medium', bar: 'w-2/3 bg-warn',  text: 'text-warn' },
   strong: { label: 'Strong', bar: 'w-full bg-ok',   text: 'text-ok'   },
 }
 
 export default function PasswordField({ showStrength = false, error, label, ...props }) {
   const [visible, setVisible] = useState(false)
-  const cfg = showStrength && props.value ? S[strength(props.value)] : null
+  const cfg = showStrength && props.value ? STRENGTH[getStrength(props.value)] : null
 
   return (
     <div>
